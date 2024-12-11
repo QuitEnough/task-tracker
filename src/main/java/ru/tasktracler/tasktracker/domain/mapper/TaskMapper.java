@@ -10,8 +10,8 @@ import ru.tasktracler.tasktracker.domain.entity.Task;
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface TaskMapper {
 
-    @Mapping(source = "id", target = "taskId")
-    TaskResponse toTaskResponse(Task task);
+//    @Mapping(source = "id", target = "taskId")
+//    TaskResponse toTaskResponse(Task task);
 
     TaskRequest toTaskRequest(Task task);
 

@@ -1,0 +1,38 @@
+services:
+
+  app:
+    container_name: app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: no
+    ports:
+      - 8081:8081
+    environment:
+      HOST_DB: db
+      PORT_DB: 5432
+      NAME_DB: ${NAME_DB}
+      USER_DB: ${USER_DB}
+      PASSWORD_DB: ${PASSWORD_DB}
+    depends_on:
+      - db
+
+  db:
+    image: postgres
+    container_name: db
+    restart: always
+    ports:
+      - 8888:5432
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${USER_DB}
+      POSTGRES_PASSWORD: ${PASSWORD_DB}
+      POSTGRES_DB: ${NAME_DB}
+
+networks:
+  app_network:
+    driver: bridge
+
+volumes:
+  postgres_data:

@@ -12,11 +12,11 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
 
     List<Task> findTaskByUserId(Long userId);
 
-//    @Query(value = """
-//            SELECT * FROM task t
-//            WHERE t.expiration_date is not null
-//            AND t.expiration_date between :start and :end
-//            """, nativeQuery = true)
+    @Query(value = """
+            SELECT * FROM tasks t
+            WHERE t.expiration_date is not null
+            AND t.expiration_date between :start and :end
+            """, nativeQuery = true)
     List<Task> findAllSoonTasks(@Param("start") Timestamp start,
                                 @Param("end") Timestamp end);
 
