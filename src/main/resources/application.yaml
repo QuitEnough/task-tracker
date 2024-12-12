@@ -20,3 +20,5 @@ spring:
         format_sql: true
   application:
     name: TASK-SERVICE
+  config:
+    import: configserver:http://localhost:9296

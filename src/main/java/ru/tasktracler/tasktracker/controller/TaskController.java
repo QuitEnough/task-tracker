@@ -8,6 +8,8 @@ import ru.tasktracler.tasktracker.domain.dto.TaskRequest;
 import ru.tasktracler.tasktracker.domain.dto.TaskResponse;
 import ru.tasktracler.tasktracker.service.TaskService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/tasks")
 public class TaskController {
@@ -19,10 +21,15 @@ public class TaskController {
         this.taskService = taskService;
     }
 
-    @GetMapping
-    public ResponseEntity<TaskResponse> getTaskById(@RequestParam("id") Long taskId) {
-        TaskResponse response = taskService.getById(taskId);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+    @PostMapping
+    public ResponseEntity<TaskResponse> createTask(@RequestBody TaskRequest taskRequest) {
+        TaskResponse taskResponse = taskService.createTask(taskRequest);
+        return new ResponseEntity<>(taskResponse, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/byUser")
+    public List<TaskResponse> getTasksByUserId(@RequestParam("id") Long userId) {
+        return taskService.getTasksByUserId(userId);
     }
 
     @PutMapping("/update")

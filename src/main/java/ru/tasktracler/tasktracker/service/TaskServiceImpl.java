@@ -29,10 +29,11 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Long createTask(TaskRequest taskRequest) {
+    public TaskResponse createTask(TaskRequest taskRequest) {
         Task task = taskMapper.toTask(taskRequest);
+        task.setStatus(Status.TODO);
         taskRepository.save(task);
-        return task.getId();
+        return taskMapper.toTaskResponse(task);
     }
 
     @Override
@@ -46,22 +47,23 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public TaskResponse editTask(TaskRequest taskRequest) {
-        TaskResponse taskExisting = getById(taskRequest.getTaskId());
         Status status;
         if (taskRequest.getStatus() == null) {
             status = Status.TODO;
         } else {
             status = taskRequest.getStatus();
         }
-        return TaskResponse
+        Task editedTask = Task
                 .builder()
-                .taskId(taskRequest.getTaskId())
+                .id(taskRequest.getTaskId())
                 .title(taskRequest.getTitle())
                 .description(taskRequest.getDescription())
                 .status(status)
                 .expirationDate(taskRequest.getExpirationDate())
                 .userId(taskRequest.getUserId())
                 .build();
+        taskRepository.save(editedTask);
+        return taskMapper.toTaskResponse(editedTask);
     }
 
     @Override
@@ -76,14 +78,22 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<Task> getTasksByUserId(Long userId) {
-        return taskRepository.findTasksByUserId(userId);
+    public List<TaskResponse> getTasksByUserId(Long userId) {
+        return taskRepository
+                .findTasksByUserId(userId)
+                .stream()
+                .map(taskMapper::toTaskResponse)
+                .toList();
     }
 
     @Override
-    public List<Task> getAllSoonTasks(Duration duration) {
+    public List<TaskResponse> getAllSoonTasks(Duration duration) {
         LocalDateTime now = LocalDateTime.now();
-        return taskRepository.findAllSoonTasks(Timestamp.valueOf(now), Timestamp.valueOf(now.plus(duration)));
+        return taskRepository
+                .findAllSoonTasks(Timestamp.valueOf(now), Timestamp.valueOf(now.plus(duration)))
+                .stream()
+                .map(taskMapper::toTaskResponse)
+                .toList();
     }
 
 }
