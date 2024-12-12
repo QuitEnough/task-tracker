@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
-    List<Task> findTaskByUserId(Long userId);
+    List<Task> findTasksByUserId(Long userId);
 
     @Query(value = """
             SELECT * FROM tasks t

@@ -11,13 +11,15 @@ public interface TaskService {
 
     Long createTask(TaskRequest taskRequest);
 
+    TaskResponse getById(Long taskId);
+
     TaskResponse editTask(TaskRequest taskRequest);
 
     boolean isTaskDone(Long taskId);
 
     void deleteTask(Long taskId);
 
-    List<Task> getTasksByUserId(Long taskId);
+    List<Task> getTasksByUserId(Long userId);
 
     List<Task> getAllSoonTasks(Duration duration);
 

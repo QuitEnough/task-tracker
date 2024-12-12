@@ -12,6 +12,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class TaskRequest {
 
+    private Long taskId;
+
     private String title;
 
     private String description;
