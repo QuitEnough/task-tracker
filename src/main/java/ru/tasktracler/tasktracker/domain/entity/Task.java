@@ -3,6 +3,7 @@ package ru.tasktracler.tasktracker.domain.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Task {
+public class Task implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,12 +26,10 @@ public class Task {
     private String description;
 
     @Column(name = "STATUS")
+    @Enumerated(value = EnumType.STRING)
     private Status status;
 
     @Column(name = "EXPIRATION_DATE")
     private LocalDateTime expirationDate;
-
-    @Column(name = "USER_ID")
-    private Long userId;
 
 }

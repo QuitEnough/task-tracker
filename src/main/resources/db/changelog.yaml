@@ -1,3 +1,5 @@
 databaseChangeLog:
   - include:
       file: db/scripts/create-tables.sql
+  - include:
+      file: db/scripts/load_data.sql

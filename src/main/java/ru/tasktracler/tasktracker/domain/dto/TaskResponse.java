@@ -22,6 +22,4 @@ public class TaskResponse {
 
     private LocalDateTime expirationDate;
 
-    private Long userId;
-
 }

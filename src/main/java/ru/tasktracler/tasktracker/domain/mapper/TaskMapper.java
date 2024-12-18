@@ -7,11 +7,16 @@ import ru.tasktracler.tasktracker.domain.dto.TaskRequest;
 import ru.tasktracler.tasktracker.domain.dto.TaskResponse;
 import ru.tasktracler.tasktracker.domain.entity.Task;
 
+import java.util.List;
+
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface TaskMapper {
 
     @Mapping(source = "id", target = "taskId")
     TaskResponse toTaskResponse(Task task);
+
+    @Mapping(source = "id", target = "taskId")
+    List<TaskResponse> toTaskResponse(Iterable<Task> taskList);
 
     @Mapping(source = "id", target = "taskId")
     TaskRequest toTaskRequest(Task task);

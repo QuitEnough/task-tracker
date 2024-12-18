@@ -1,6 +1,7 @@
 package ru.tasktracler.tasktracker.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.tasktracler.tasktracker.domain.dto.TaskRequest;
 import ru.tasktracler.tasktracker.domain.dto.TaskResponse;
@@ -16,57 +17,44 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class TaskServiceImpl implements TaskService {
 
     private final TaskRepository taskRepository;
 
     private final TaskMapper taskMapper;
 
-    @Autowired
-    public TaskServiceImpl(TaskRepository taskRepository, TaskMapper taskMapper) {
-        this.taskRepository = taskRepository;
-        this.taskMapper = taskMapper;
-    }
-
     @Override
-    public Long createTask(TaskRequest taskRequest) {
+    @Transactional
+    public TaskResponse createTask(TaskRequest taskRequest) {
         Task task = taskMapper.toTask(taskRequest);
+        task.setStatus(Status.TODO);
         taskRepository.save(task);
-        return task.getId();
-    }
-
-    @Override
-    public TaskResponse getById(Long taskId) {
-        Task task = taskRepository
-                .findById(taskId)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Task not found"));
+        taskRepository.assignTask(taskRequest.getUserId(), task.getId());
         return taskMapper.toTaskResponse(task);
     }
 
     @Override
     public TaskResponse editTask(TaskRequest taskRequest) {
-        TaskResponse taskExisting = getById(taskRequest.getTaskId());
-        Status status;
-        if (taskRequest.getStatus() == null) {
-            status = Status.TODO;
-        } else {
-            status = taskRequest.getStatus();
-        }
-        return TaskResponse
+        Task editedTask = Task
                 .builder()
-                .taskId(taskRequest.getTaskId())
+                .id(taskRequest.getTaskId())
                 .title(taskRequest.getTitle())
                 .description(taskRequest.getDescription())
-                .status(status)
+                .status(taskRequest.getStatus() == null ? Status.TODO : taskRequest.getStatus())
                 .expirationDate(taskRequest.getExpirationDate())
-                .userId(taskRequest.getUserId())
                 .build();
+        taskRepository.save(editedTask);
+        return taskMapper.toTaskResponse(editedTask);
     }
 
     @Override
     public boolean isTaskDone(Long taskId) {
-        TaskResponse taskResponse = getById(taskId);
+        Task task = taskRepository
+                .findById(taskId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Task not found"));
+        TaskResponse taskResponse = taskMapper.toTaskResponse(task);
         return taskResponse.getStatus() == Status.DONE;
     }
 
@@ -76,14 +64,18 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public List<Task> getTasksByUserId(Long userId) {
-        return taskRepository.findTasksByUserId(userId);
+    public List<TaskResponse> getTasksByUserId(Long userId) {
+        return taskMapper.toTaskResponse(
+                taskRepository.findTasksByUserId(userId));
     }
 
     @Override
-    public List<Task> getAllSoonTasks(Duration duration) {
+    public List<TaskResponse> getAllSoonTasks(Duration duration) {
         LocalDateTime now = LocalDateTime.now();
-        return taskRepository.findAllSoonTasks(Timestamp.valueOf(now), Timestamp.valueOf(now.plus(duration)));
+        return taskMapper.toTaskResponse(
+                taskRepository.findAllSoonTasks(
+                        Timestamp.valueOf(now),
+                        Timestamp.valueOf(now.plus(duration))));
     }
 
 }

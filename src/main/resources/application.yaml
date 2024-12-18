@@ -19,4 +19,4 @@ spring:
       hibernate:
         format_sql: true
   application:
-    name: TASK-SERVICE
+    name: TASK-TRACKER
