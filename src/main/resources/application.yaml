@@ -20,3 +20,8 @@ spring:
         format_sql: true
   application:
     name: TASK-TRACKER
+
+logging:
+  level:
+    org.springframework:
+      web: DEBUG
