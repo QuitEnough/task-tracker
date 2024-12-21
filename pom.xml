@@ -19,21 +19,23 @@
 
     <properties>
         <java.version>17</java.version>
-        <org.springframework.boot.version>3.4.0</org.springframework.boot.version>
-        <org.mapstruct.version>1.6.2</org.mapstruct.version>
+        <springframework.boot.version>3.4.0</springframework.boot.version>
+        <mapstruct.version>1.6.2</mapstruct.version>
         <logstash.version>7.3</logstash.version>
+        <springdoc.version>2.2.0</springdoc.version>
+        <jetbrains.version>26.0.1</jetbrains.version>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter</artifactId>
-            <version>${org.springframework.boot.version}</version>
+            <version>${springframework.boot.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-            <version>${org.springframework.boot.version}</version>
+            <version>${springframework.boot.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -55,9 +57,14 @@
             <optional>true</optional>
         </dependency>
         <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>${jetbrains.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
-            <version>${org.mapstruct.version}</version>
+            <version>${mapstruct.version}</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -67,7 +74,7 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
-            <version>${org.springframework.boot.version}</version>
+            <version>${springframework.boot.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -78,6 +85,11 @@
             <groupId>net.logstash.logback</groupId>
             <artifactId>logstash-logback-encoder</artifactId>
             <version>${logstash.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>${springdoc.version}</version>
         </dependency>
     </dependencies>
 
@@ -139,7 +151,7 @@
                         <path>
                             <groupId>org.mapstruct</groupId>
                             <artifactId>mapstruct-processor</artifactId>
-                            <version>${org.mapstruct.version}</version>
+                            <version>${mapstruct.version}</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>

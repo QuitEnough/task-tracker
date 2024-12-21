@@ -3,6 +3,7 @@ package ru.tasktracler.tasktracker.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import ru.tasktracler.tasktracker.domain.dto.UserRequest;
 import ru.tasktracler.tasktracker.domain.dto.UserResponse;
@@ -65,7 +66,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse getUserByEmail(String email) {
+    public UserResponse getUserByEmail(@NotNull String email) {
         log.debug("[UserService] Getting user Details with email: {}", email);
 
         User user = userRepository

@@ -34,6 +34,7 @@ public class TaskServiceImpl implements TaskService {
         Task task = taskMapper.toTask(taskRequest);
         task.setStatus(Status.TODO);
         taskRepository.save(task);
+        // TODO: кинуть эксепшн, посмотреть, что save сделает rollback
         taskRepository.assignTask(taskRequest.getUserId(), task.getId());
         return taskMapper.toTaskResponse(task);
     }

@@ -20,11 +20,11 @@ public class TaskController {
     private final TaskService taskService;
 
     @PostMapping
-    public ResponseEntity<TaskResponse> createTask(@RequestBody TaskRequest taskRequest) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public TaskResponse createTask(@RequestBody TaskRequest taskRequest) {
         log.debug("[RequestBody] Create Task with Details: {}", taskRequest);
 
-        TaskResponse taskResponse = taskService.createTask(taskRequest);
-        return new ResponseEntity<>(taskResponse, HttpStatus.CREATED);
+        return taskService.createTask(taskRequest);
     }
 
     @GetMapping("/by-user")
@@ -34,19 +34,15 @@ public class TaskController {
     }
 
     @PutMapping("/update")
-    public ResponseEntity<TaskResponse> updateTask(@RequestBody TaskRequest taskRequest) {
+    public TaskResponse updateTask(@RequestBody TaskRequest taskRequest) {
         log.debug("[RequestBody] Update Task with Details: {}", taskRequest);
-
-        TaskResponse response = taskService.editTask(taskRequest);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return taskService.editTask(taskRequest);
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<Void> deleteTask(@RequestParam("id") Long taskId) {
+    public void deleteTask(@RequestParam("id") Long taskId) {
         log.debug("[RequestParam] Delete Task with id: {}", taskId);
-
         taskService.deleteTask(taskId);
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

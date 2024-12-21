@@ -18,42 +18,36 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<Void> createUser(@RequestBody UserRequest request) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public void createUser(@RequestBody UserRequest request) {
         log.debug("[RequestBody] create User with Details {}: ", request);
-
         userService.createUser(request);
-        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<Void> updateUser(@RequestBody UserRequest request,
-                                           @RequestParam("id") Long userId) {
+    public void updateUser(@RequestBody UserRequest request,
+                           @RequestParam("id") Long userId) {
         log.debug("[RequestParams] update User with id {} to new Details: {}", userId, request);
-
         userService.updateUser(request, userId);
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping
     public ResponseEntity<UserResponse> getUser(@RequestParam(required = false) Long id,
                                                 @RequestParam(required = false) String email) {
         log.debug("[RequestParams] get User with id {} or email {}", id, email);
-
-        UserResponse userResponse;
-        if (id != null) {
-            userResponse = userService.getUserById(id);
-        } else {
-            userResponse = userService.getUserByEmail(email);
+        if (id == null && email == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity<>(userResponse, HttpStatus.OK);
+        if (id != null) {
+            return new ResponseEntity<>(userService.getUserById(id), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(userService.getUserByEmail(email), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete")
-    public ResponseEntity<Void> deleteUser(@RequestParam("id") Long userId) {
+    public void deleteUser(@RequestParam("id") Long userId) {
         log.debug("[RequestParams] delete User with id {}", userId);
-
         userService.deleteUser(userId);
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }
