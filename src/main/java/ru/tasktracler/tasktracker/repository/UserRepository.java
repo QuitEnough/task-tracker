@@ -36,7 +36,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findTaskAuthor(@Param("taskId") Long taskId);
 
     @Modifying
-    @Query("update User u set u.name = ?1, u.email = ?2, u.password = ?3 where u.id = ?4")
-    void updateUserById(String userName, String email, String password, Long userId);
+    @Query(value = """
+             update users u 
+             set name = :userName, email = :email, password = :password 
+             where u.id = :userId
+             """, nativeQuery = true)
+    void updateUserById(@Param("userName") String userName,
+                        @Param("email") String email,
+                        @Param("password") String password,
+                        @Param("userId") Long userId);
 
 }

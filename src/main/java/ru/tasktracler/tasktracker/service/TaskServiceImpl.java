@@ -34,7 +34,6 @@ public class TaskServiceImpl implements TaskService {
         Task task = taskMapper.toTask(taskRequest);
         task.setStatus(Status.TODO);
         taskRepository.save(task);
-        // TODO: кинуть эксепшн, посмотреть, что save сделает rollback
         taskRepository.assignTask(taskRequest.getUserId(), task.getId());
         return taskMapper.toTaskResponse(task);
     }
@@ -42,6 +41,9 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public TaskResponse editTask(TaskRequest taskRequest) {
         log.debug("[TaskService] Updating task with details: {}", taskRequest);
+        if (!taskRepository.existsById(taskRequest.getTaskId())) {
+            throw new ResourceNotFoundException("Task with given id does not found");
+        }
 
         Task editedTask = Task
                 .builder()
@@ -70,7 +72,11 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void deleteTask(Long taskId) {
         log.debug("[TaskService] Deleting task with id: {}", taskId);
-        taskRepository.deleteById(taskId);
+        if (taskRepository.existsById(taskId)) {
+            taskRepository.deleteById(taskId);
+        } else {
+            throw new ResourceNotFoundException("Task with given id does not found");
+        }
     }
 
     @Override
