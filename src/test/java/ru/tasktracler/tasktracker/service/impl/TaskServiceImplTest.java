@@ -1,13 +1,13 @@
-package ru.tasktracler.tasktracker.service;
+package ru.tasktracler.tasktracker.service.impl;
 
 import org.junit.jupiter.api.Test;
-import org.mockito.MockedStatic;
 import ru.tasktracler.tasktracker.domain.dto.TaskRequest;
 import ru.tasktracler.tasktracker.domain.dto.TaskResponse;
 import ru.tasktracler.tasktracker.domain.entity.Status;
 import ru.tasktracler.tasktracker.domain.entity.Task;
 import ru.tasktracler.tasktracker.domain.mapper.TaskMapper;
 import ru.tasktracler.tasktracker.repository.TaskRepository;
+import ru.tasktracler.tasktracker.service.impl.TaskServiceImpl;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -81,7 +81,6 @@ class TaskServiceImplTest {
         assertEquals(task.getTitle(), testTask.getTitle());
         assertEquals(task.getDescription(), testTask.getDescription());
         assertEquals(task.getStatus(), testTask.getStatus());
-
 
 //        TaskRequest taskRequest = TaskRequest
 //                .builder()

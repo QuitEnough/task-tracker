@@ -3,10 +3,9 @@ package ru.tasktracler.tasktracker.controller;
 import org.junit.jupiter.api.Test;
 import ru.tasktracler.tasktracker.domain.dto.UserRequest;
 import ru.tasktracler.tasktracker.domain.dto.UserResponse;
-import ru.tasktracler.tasktracker.service.UserServiceImpl;
+import ru.tasktracler.tasktracker.service.impl.UserServiceImpl;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.endsWith;
 import static org.mockito.Mockito.*;
 
 class UserControllerTest {

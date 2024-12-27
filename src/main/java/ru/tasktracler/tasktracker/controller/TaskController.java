@@ -63,8 +63,7 @@ public class TaskController {
     @Operation(summary = "Delete the Task")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Task deleted"),
-            @ApiResponse(responseCode = "400", description = "Request null or invalid"),
-            @ApiResponse(responseCode = "404", description = "Task was not found")
+            @ApiResponse(responseCode = "400", description = "Request null or invalid")
     })
     public void deleteTask(@RequestParam("id") Long taskId) {
         log.debug("[RequestParam] Delete Task with id: {}", taskId);

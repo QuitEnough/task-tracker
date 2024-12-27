@@ -1,4 +1,4 @@
-package ru.tasktracler.tasktracker.service;
+package ru.tasktracler.tasktracker.service.impl;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -7,10 +7,15 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 import ru.tasktracler.tasktracker.domain.dto.UserRequest;
 import ru.tasktracler.tasktracker.domain.dto.UserResponse;
+import ru.tasktracler.tasktracker.domain.entity.MailType;
 import ru.tasktracler.tasktracker.domain.entity.User;
 import ru.tasktracler.tasktracker.domain.mapper.UserMapper;
 import ru.tasktracler.tasktracker.exception.ResourceNotFoundException;
 import ru.tasktracler.tasktracker.repository.UserRepository;
+import ru.tasktracler.tasktracker.service.MailService;
+import ru.tasktracler.tasktracker.service.UserService;
+
+import java.util.Properties;
 
 import static ru.tasktracler.tasktracker.utils.CustomPasswordEncoder.encode;
 
@@ -23,11 +28,10 @@ public class UserServiceImpl implements UserService {
 
     private final UserMapper userMapper;
 
+    private final MailService mailService;
+
     @Override
     public void createUser(UserRequest userRequest) {
-        if (userRepository.existsByEmail(userRequest.getEmail())) {
-            throw new IllegalStateException("User already exists.");
-        }
         if (!userRequest.getPassword().equals(userRequest.getPasswordConfirmation())) {
             throw new IllegalStateException("Password and password confirmation do not match.");
         }
@@ -36,22 +40,19 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.toUser(userRequest);
         user.setPassword(encode(user.getPassword()));
         userRepository.save(user);
+        mailService.sendEmail(user, MailType.REGISTRATION, new Properties());
     }
 
     @Override
     @Transactional
     public void updateUser(UserRequest userRequest, Long userId) {
-        if (userRepository.existsByEmail(userRequest.getEmail())) {
-            log.debug("[UserService] Updating user's details to: {}", userRequest);
+        log.debug("[UserService] Updating user's details to: {}", userRequest);
 
-            userRepository.updateUserById(
-                    userRequest.getName(),
-                    userRequest.getEmail(),
-                    encode(userRequest.getPassword()),
-                    userId);
-        } else {
-            throw new ResourceNotFoundException("User does not exists.");
-        }
+        userRepository.updateUserById(
+                userRequest.getName(),
+                userRequest.getEmail(),
+                encode(userRequest.getPassword()),
+                userId);
     }
 
     @Override
@@ -96,11 +97,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void deleteUser(Long userId) {
         log.debug("[UserService] Deleting user with id: {}", userId);
-        if (userRepository.existsById(userId)) {
-            userRepository.deleteById(userId);
-        } else {
-            throw new ResourceNotFoundException("User with given id not found");
-        }
+        userRepository.deleteById(userId);
     }
 
 }

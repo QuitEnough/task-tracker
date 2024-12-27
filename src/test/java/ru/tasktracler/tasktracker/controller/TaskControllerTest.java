@@ -5,7 +5,7 @@ import ru.tasktracler.tasktracker.domain.dto.TaskRequest;
 import ru.tasktracler.tasktracker.domain.dto.TaskResponse;
 import ru.tasktracler.tasktracker.domain.entity.Status;
 import ru.tasktracler.tasktracker.repository.TaskRepository;
-import ru.tasktracler.tasktracker.service.TaskServiceImpl;
+import ru.tasktracler.tasktracker.service.impl.TaskServiceImpl;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;

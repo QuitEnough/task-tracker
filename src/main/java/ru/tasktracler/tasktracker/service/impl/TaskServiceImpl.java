@@ -1,4 +1,4 @@
-package ru.tasktracler.tasktracker.service;
+package ru.tasktracler.tasktracker.service.impl;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +11,7 @@ import ru.tasktracler.tasktracker.domain.entity.Task;
 import ru.tasktracler.tasktracker.domain.mapper.TaskMapper;
 import ru.tasktracler.tasktracker.exception.ResourceNotFoundException;
 import ru.tasktracler.tasktracker.repository.TaskRepository;
+import ru.tasktracler.tasktracker.service.TaskService;
 
 import java.sql.Timestamp;
 import java.time.Duration;
@@ -41,9 +42,6 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public TaskResponse editTask(TaskRequest taskRequest) {
         log.debug("[TaskService] Updating task with details: {}", taskRequest);
-        if (!taskRepository.existsById(taskRequest.getTaskId())) {
-            throw new ResourceNotFoundException("Task with given id does not found");
-        }
 
         Task editedTask = Task
                 .builder()
@@ -72,11 +70,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void deleteTask(Long taskId) {
         log.debug("[TaskService] Deleting task with id: {}", taskId);
-        if (taskRepository.existsById(taskId)) {
-            taskRepository.deleteById(taskId);
-        } else {
-            throw new ResourceNotFoundException("Task with given id does not found");
-        }
+        taskRepository.deleteById(taskId);
     }
 
     @Override

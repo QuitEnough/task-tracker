@@ -1,18 +1,20 @@
-package ru.tasktracler.tasktracker.service;
+package ru.tasktracler.tasktracker.service.impl;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import ru.tasktracler.tasktracker.domain.dto.UserRequest;
 import ru.tasktracler.tasktracker.domain.dto.UserResponse;
+import ru.tasktracler.tasktracker.domain.entity.MailType;
 import ru.tasktracler.tasktracker.domain.entity.User;
 import ru.tasktracler.tasktracker.domain.mapper.UserMapper;
 import ru.tasktracler.tasktracker.exception.ResourceNotFoundException;
 import ru.tasktracler.tasktracker.repository.UserRepository;
+import ru.tasktracler.tasktracker.service.impl.MailServiceImpl;
+import ru.tasktracler.tasktracker.service.impl.UserServiceImpl;
 import ru.tasktracler.tasktracker.utils.CustomPasswordEncoder;
 
 import java.util.Optional;
 import java.util.Properties;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -23,22 +25,30 @@ class UserServiceImplTest {
 
     private final UserMapper userMapper = mock(UserMapper.class);
 
-    private final UserServiceImpl userService = new UserServiceImpl(userRepository, userMapper);
+    private final MailServiceImpl mailService = mock(MailServiceImpl.class);
+
+    private final UserServiceImpl userService = new UserServiceImpl(userRepository, userMapper, mailService);
 
     @Test
     void createUser() {
         String email = "username@gmail.com";
         String password = "password";
+        UserRequest userRequest = UserRequest
+                .builder()
+                .name("name")
+                .email("username@gmail.com")
+                .password("password")
+                .passwordConfirmation("password")
+                .build();
+
         User user = new User();
-        user.setEmail(email);
         user.setPassword(password);
-        user.setPasswordConfirmation(password);
-        when(userRepository.findByEmail(email))
-                .thenReturn(Optional.empty());
         when(CustomPasswordEncoder.encode(password))
                 .thenReturn("encodedPassword");
-        userService.createUser(userMapper.toUserRequest(user));
-        verify(userRepository).save(user);
+        userService.createUser(userRequest);
+        verify(userRepository).save(userMapper.toUser(userRequest));
+        verify(mailService)
+                .sendEmail(user, MailType.REGISTRATION, new Properties());
     }
 
     @Test
@@ -156,4 +166,5 @@ class UserServiceImplTest {
         userService.deleteUser(userId);
         verify(userRepository).deleteById(userId);
     }
+
 }
