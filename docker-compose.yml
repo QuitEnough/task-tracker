@@ -30,6 +30,18 @@ services:
       POSTGRES_PASSWORD: ${PASSWORD_DB}
       POSTGRES_DB: ${NAME_DB}
 
+  redis:
+    image: redis:7.2-rc-alpine
+    restart: always
+    container_name: redis
+    networks:
+      - app_network
+    ports:
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
+    volumes:
+      - cache:/data
+
   elasticsearch:
     image: elasticsearch:7.9.1
     container_name: elasticsearch
@@ -96,6 +108,8 @@ networks:
 
 volumes:
   postgres_data:
+  cache:
+    driver: local
   test_data:
   ls_data:
   kb_data:

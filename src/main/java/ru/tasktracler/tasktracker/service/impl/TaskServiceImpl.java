@@ -1,9 +1,9 @@
 package ru.tasktracler.tasktracker.service.impl;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.tasktracler.tasktracker.domain.dto.TaskRequest;
 import ru.tasktracler.tasktracker.domain.dto.TaskResponse;
 import ru.tasktracler.tasktracker.domain.entity.Status;

@@ -8,13 +8,15 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Schema(description = "Request for user information")
-public class UserRequest {
+public class UserRequest implements Serializable {
 
     @Schema(description = "User name",
             example = "John Doe")
