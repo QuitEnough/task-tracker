@@ -52,7 +52,7 @@ public class TaskController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Task updated"),
             @ApiResponse(responseCode = "400", description = "Task info null or invalid"),
-            @ApiResponse(responseCode = "404", description = "Task was not found")
+            @ApiResponse(responseCode = "500", description = "Task was not found")
     })
     public TaskResponse updateTask(@RequestBody @Valid TaskRequest taskRequest) {
         log.debug("[RequestBody] Update Task with Details: {}", taskRequest);

@@ -28,7 +28,8 @@ public class UserController {
     @Operation(summary = "Sign up the user")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "User created"),
-            @ApiResponse(responseCode = "400", description = "User invalid values or already exists")
+            @ApiResponse(responseCode = "400", description = "User invalid values"),
+            @ApiResponse(responseCode = "500", description = "User null")
     })
     public void createUser(@RequestBody @Valid UserRequest request) {
         log.debug("[RequestBody] create User with Details {}: ", request);
@@ -39,7 +40,7 @@ public class UserController {
     @Operation(summary = "Update the user")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User updated"),
-            @ApiResponse(responseCode = "404", description = "User does not exists"),
+            @ApiResponse(responseCode = "400", description = "Request null"),
             @ApiResponse(responseCode = "500", description = "User null or invalid values")
     })
     public void updateUser(@RequestBody @Valid UserRequest request,
@@ -71,8 +72,7 @@ public class UserController {
     @Operation(summary = "Delete User by Id")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "User deleted"),
-            @ApiResponse(responseCode = "400", description = "Bad request"),
-            @ApiResponse(responseCode = "404", description = "User not found")
+            @ApiResponse(responseCode = "400", description = "Bad request")
     })
     public void deleteUser(@RequestParam("id") Long userId) {
         log.debug("[RequestParams] delete User with id {}", userId);

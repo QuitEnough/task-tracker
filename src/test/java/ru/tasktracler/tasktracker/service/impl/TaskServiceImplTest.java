@@ -56,6 +56,7 @@ class TaskServiceImplTest {
         doAnswer(invocation -> {
             Task createdTask = invocation.getArgument(0);
             createdTask.setId(taskId);
+            createdTask.setStatus(Status.TODO);
             return createdTask;
         }).when(taskRepository).save(task);
 
