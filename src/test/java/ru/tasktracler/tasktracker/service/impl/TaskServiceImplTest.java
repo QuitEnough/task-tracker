@@ -71,30 +71,31 @@ class TaskServiceImplTest {
         Long id = 1L;
         Task task = new Task();
         task.setId(id);
+        task.setTitle("title");
         task.setStatus(Status.DONE);
 
-        when(taskRepository.findById(task.getId()))
-                .thenReturn(Optional.of(task));
+        TaskResponse taskResponse = TaskResponse
+                .builder()
+                .taskId(id)
+                .title("title")
+                .status(Status.DONE)
+                .build();
 
-        TaskResponse testTask = taskService.editTask(taskMapper.toTaskRequest(task));
-        verify(taskRepository).save(task);
-        assertEquals(taskMapper.toTaskResponse(task), testTask);
-        assertEquals(task.getTitle(), testTask.getTitle());
-        assertEquals(task.getDescription(), testTask.getDescription());
-        assertEquals(task.getStatus(), testTask.getStatus());
+        when(taskMapper.toTaskResponse(task))
+                .thenReturn(taskResponse);
 
-//        TaskRequest taskRequest = TaskRequest
-//                .builder()
-//                .taskId(1L)
-//                .title("task")
-//                .description("desc")
-//                .status(Status.TODO)
-//                .expirationDate(LocalDateTime.now())
-//                .userId(1L)
-//                .build();
-//
-//        taskService.editTask(taskRequest);
-//        verify(taskRepository).save(any());
+        TaskRequest taskRequest = TaskRequest
+                .builder()
+                .taskId(id)
+                .title("title")
+                .status(Status.DONE)
+                .build();
+
+        TaskResponse testTask = taskService.editTask(taskRequest);
+        verify(taskRepository).save(any());
+        assertEquals(taskResponse.getTaskId(), testTask.getTaskId());
+        assertEquals(taskResponse.getTitle(), testTask.getTitle());
+        assertEquals(taskResponse.getStatus(), testTask.getStatus());
     }
 
     @Test
@@ -120,8 +121,15 @@ class TaskServiceImplTest {
         task.setId(taskId);
         task.setStatus(Status.DONE);
 
+        TaskResponse taskResponse = TaskResponse
+                .builder()
+                .status(Status.DONE)
+                .build();
+
         when(taskRepository.findById(taskId))
                 .thenReturn(Optional.of(task));
+        when(taskMapper.toTaskResponse(task))
+                .thenReturn(taskResponse);
 
         boolean isTaskDone = taskService.isTaskDone(taskId);
         verify(taskRepository).findById(taskId);
